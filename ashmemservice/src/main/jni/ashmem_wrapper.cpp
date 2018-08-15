@@ -29,7 +29,7 @@ AshmemWrapper::~AshmemWrapper() {
 }
 
 int32_t AshmemWrapper::CreateFromParcel(int fd, int size, AshmemWrapper **out) {
-  int32_t ret = EBADFD;
+  int32_t ret = -EBADFD;
 
   LOG_I("%s %d %d %d", __FUNCTION__, __LINE__, fd, size);
   if (fd >= 0 && size > 0) {
