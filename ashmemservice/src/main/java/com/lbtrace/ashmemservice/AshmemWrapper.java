@@ -60,7 +60,9 @@ public class AshmemWrapper implements Parcelable, IAshmemReader {
     }
 
     // Server process using.
-    public AshmemWrapper(String name, @NonNull int length) throws IOException {
+    public AshmemWrapper(String name, int length) throws IOException {
+        if (length <= 0)
+            throw new IllegalArgumentException("Ashmem size " + length);
         mAshmemSize = length;
         mMemoryFile = new MemoryFile(name, length);
     }
