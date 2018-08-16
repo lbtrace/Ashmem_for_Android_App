@@ -17,9 +17,18 @@
 package com.lbtrace.ashmemservice;
 
 /*
- * File Description
+ * Interface for read data from Ashmem.
  */
 public interface IAshmemReader {
+    /**
+     * Read data from Ashmem.
+     *
+     * @return byte array of data
+     */
     byte[] read();
+
+    /**
+     * Close AshmemReader after read data.
+     */
     void close();
 }

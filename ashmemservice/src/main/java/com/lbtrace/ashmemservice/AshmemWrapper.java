@@ -26,7 +26,9 @@ import java.io.FileDescriptor;
 import java.io.IOException;
 
 /*
- * File Description
+ * AshmemWrapper represent Ashmem between Client process and Server process.
+ * In Server process, AshmemWrapper just using MemoryFile. Now Client process
+ * only read Ashmem.
  */
 public class AshmemWrapper implements Parcelable, IAshmemReader {
     private static final String LOG_TAG = AshmemWrapper.class.getSimpleName();
@@ -57,6 +59,7 @@ public class AshmemWrapper implements Parcelable, IAshmemReader {
         System.loadLibrary("ashmemwrapper");
     }
 
+    // Server process using.
     public AshmemWrapper(String name, @NonNull int length) throws IOException {
         mAshmemSize = length;
         mMemoryFile = new MemoryFile(name, length);
@@ -90,6 +93,15 @@ public class AshmemWrapper implements Parcelable, IAshmemReader {
         return CREATOR.createFromParcel(parcel);
     }
 
+    /**
+     * Write buffer byte array to Ashmem in Server process.
+     *
+     * @param buffer     byte array that write to Ashmem
+     * @param srcOffset  offset position in buffer
+     * @param destOffset offset position in Ashmem
+     * @param count      byte count to write
+     * @throws IOException If Ashmem has been closed
+     */
     public void writeBytes(@NonNull byte[] buffer, int srcOffset, int destOffset, int count)
             throws IOException {
         mMemoryFile.writeBytes(buffer, srcOffset, destOffset, count);
@@ -124,6 +136,7 @@ public class AshmemWrapper implements Parcelable, IAshmemReader {
         }
     }
 
+    // Client process using
     private AshmemWrapper(Parcel parcel) {
         mMemoryFile = null;
 

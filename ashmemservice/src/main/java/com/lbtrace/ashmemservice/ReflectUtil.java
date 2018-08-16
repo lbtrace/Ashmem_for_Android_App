@@ -16,6 +16,8 @@
 
 package com.lbtrace.ashmemservice;
 
+import android.support.annotation.NonNull;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -23,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /*
- * File Description
+ * Reflect Utils
  */
 public class ReflectUtil {
     /**
@@ -33,18 +35,17 @@ public class ReflectUtil {
      * @param paramType the list of parameters
      * @return the special constructor
      */
-    public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... paramType)
+    public static Constructor<?> getConstructor(@NonNull Class<?> clazz, Class<?>... paramType)
             throws NoSuchMethodException {
         Constructor<?> constructor = null;
 
-        if (clazz != null) {
-            try {
-                constructor = clazz.getDeclaredConstructor(paramType);
-            } catch (NoSuchMethodException e) {
-                throw new NoSuchMethodException(clazz.toString() + " no constructor with params " +
-                        paramType.toString());
-            }
+        try {
+            constructor = clazz.getDeclaredConstructor(paramType);
+        } catch (NoSuchMethodException e) {
+            throw new NoSuchMethodException(clazz.toString() + " no constructor with params " +
+                    paramType.toString());
         }
+
 
         return constructor;
     }
@@ -57,7 +58,7 @@ public class ReflectUtil {
      * @param paramType the list of parameters in special method
      * @return method object
      */
-    public static Method getMethod(Class<?> clazz, String name, Class<?>... paramType)
+    public static Method getMethod(@NonNull Class<?> clazz, String name, Class<?>... paramType)
             throws NoSuchMethodException {
         for (; clazz != null; clazz = clazz.getSuperclass()) {
             try {
@@ -84,7 +85,7 @@ public class ReflectUtil {
      * @param name  the name of special field
      * @return field object
      */
-    public static Field getField(Class<?> clazz, String name)
+    public static Field getField(@NonNull Class<?> clazz, String name)
             throws NoSuchFieldException {
         for (; clazz != null; clazz = clazz.getSuperclass()) {
             try {
@@ -110,21 +111,19 @@ public class ReflectUtil {
      * @param params the list of params
      * @return the result of dispatching method
      */
-    public static Object invokeMethod(Object obj, Method method, Object... params)
+    public static Object invokeMethod(@NonNull Object obj, @NonNull Method method, Object... params)
             throws IllegalAccessException, InvocationTargetException {
         Object ret = null;
 
-        if (obj != null && method != null) {
-            if (!method.isAccessible())
-                method.setAccessible(true);
+        if (!method.isAccessible())
+            method.setAccessible(true);
 
-            try {
-                ret = method.invoke(obj, params);
-            } catch (IllegalAccessException e) {
-                throw new IllegalAccessException("Method " + method.getName() + " IllegalAccess");
-            } catch (InvocationTargetException e) {
-                throw new InvocationTargetException(e);
-            }
+        try {
+            ret = method.invoke(obj, params);
+        } catch (IllegalAccessException e) {
+            throw new IllegalAccessException("Method " + method.getName() + " IllegalAccess");
+        } catch (InvocationTargetException e) {
+            throw new InvocationTargetException(e);
         }
 
         return ret;
@@ -138,7 +137,7 @@ public class ReflectUtil {
      * @param fieldName     the field name
      * @param extraElements the extra array
      */
-    public static void expandFieldArray(Object instance, String fieldName,
+    public static void expandFieldArray(@NonNull Object instance, @NonNull String fieldName,
                                         Object[] extraElements) throws Exception {
         Field field = ReflectUtil.getField(instance.getClass(), fieldName);
         Object[] original = (Object[]) field.get(instance);

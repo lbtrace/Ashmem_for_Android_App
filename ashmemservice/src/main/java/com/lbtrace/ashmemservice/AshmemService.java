@@ -27,10 +27,13 @@ import com.lbtrace.ashmemservice.IAshmem.AshmemNative;
 import java.io.IOException;
 
 /*
- * File Description
+ * Usually, AshmemService should run in separate process as Server.
+ * You can extends AshmemService. Ashmem create in AshmemService onCreate() and
+ * close in onDestory()
  */
 public class AshmemService extends Service {
     private static final String LOG_TAG = AshmemService.class.getSimpleName();
+    // default name
     private String mAshmemName = "App:ashmem";
     // default is 2MB
     private int mAshmemSize = 2 * 1024 * 1024;
@@ -70,11 +73,21 @@ public class AshmemService extends Service {
         mAshmem.writeBytes(buffer, srcOffset, destOffset, count);
     }
 
-    protected void setmAshmemName(String mAshmemName) {
-        this.mAshmemName = mAshmemName;
+    /**
+     * Set name of Ashmem. Must invoke it before onCreate().
+     *
+     * @param ashmemName Ashmem name
+     */
+    protected void setmAshmemName(String ashmemName) {
+        this.mAshmemName = ashmemName;
     }
 
-    protected void setmAshmemSize(int mAshmemSize) {
-        this.mAshmemSize = mAshmemSize;
+    /**
+     * Set size of Ashmem. Must invoke it before onCreate().
+     *
+     * @param ashmemSize Ashmem size
+     */
+    protected void setmAshmemSize(int ashmemSize) {
+        this.mAshmemSize = ashmemSize;
     }
 }
