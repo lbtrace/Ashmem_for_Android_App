@@ -15,46 +15,44 @@ import com.lbtrace.ashmemservice.IAshmemReader;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = "TestAshmemDemo";
+    private ServiceConnection mAshmemSC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        ServiceConnection serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                IAshmem ashmemProxy = AshmemNative.asInterface(service);
-                IAshmemReader ashmemReader = ashmemProxy.getAshmemReader();
-                if (ashmemReader != null) {
-                    byte[] result = ashmemReader.read();
-                    StringBuilder stringBuilder = new StringBuilder();
-
-                    for (byte value : result) {
-                        stringBuilder.append(value).append(" ");
-                    }
-                    Log.i(LOG_TAG, stringBuilder.toString());
-                    ashmemReader.close();
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        };
+        mAshmemSC = new AshmemServiceConnection();
         bindService(new Intent(this, TestAshmemService.class),
-                serviceConnection, Context.BIND_AUTO_CREATE);
-
+                mAshmemSC, Context.BIND_AUTO_CREATE);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        unbindService(mAshmemSC);
+        super.onDestroy();
     }
+
+    private static class AshmemServiceConnection implements ServiceConnection {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            IAshmem ashmemProxy = AshmemNative.asInterface(service);
+            IAshmemReader ashmemReader = ashmemProxy.getAshmemReader();
+            if (ashmemReader != null) {
+                byte[] result = ashmemReader.read();
+                StringBuilder stringBuilder = new StringBuilder();
+
+                for (byte value : result) {
+                    stringBuilder.append(value).append(" ");
+                }
+                Log.i(LOG_TAG, stringBuilder.toString());
+                ashmemReader.close();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    }
+
 }
