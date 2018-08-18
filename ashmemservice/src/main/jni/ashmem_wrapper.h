@@ -20,21 +20,26 @@
 #include <stdint.h>
 
 namespace ashmem_wrapper {
+// This Class store Ashmem information such as file description.
+// It work in Ashmem Client process.
 class AshmemWrapper {
  public:
   AshmemWrapper(int ashmem_fd, void *data, int size) : ashmem_fd_(ashmem_fd),
-                                                       data_(data),
-                                                       size_(size) {
+													   data_(data),
+													   size_(size) {
   }
   ~AshmemWrapper();
   static int32_t CreateFromParcel(int fd, int size, AshmemWrapper **out);
   void *GetData() {
-    return data_;
+	return data_;
   }
 
  private:
+  // Ashmem file description
   int ashmem_fd_;
+  // startup address of Ashmem
   void *data_;
+  // size of Ashmem
   int size_;
 };
 } // namespace ashmem_wrapper
