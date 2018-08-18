@@ -27,7 +27,7 @@ import com.lbtrace.ashmemservice.IAshmemReader;
 
 
 /*
- * File Description
+ * Using for communicating with Ashmem Server.
  */
 public class AshmemProxy implements IAshmem {
     private static final String LOG_TAG = AshmemProxy.class.getSimpleName();

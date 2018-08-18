@@ -23,11 +23,16 @@ import com.lbtrace.ashmemservice.AshmemWrapper;
 import com.lbtrace.ashmemservice.IAshmemReader;
 
 /*
- * File Description
+ * API for communicating with Ashmem Server process.
  */
 public interface IAshmem extends IInterface {
     static final String DESCRIPTION = "IAshmem";
     static final int TRANSACTION_GET_ASHMEMREADER = IBinder.FIRST_CALL_TRANSACTION;
 
+    /**
+     * Get AshmemWrapper for access Ashmem in Ashmem Client.
+     *
+     * @return AshmemWrapper
+     */
     IAshmemReader getAshmemReader();
 }

@@ -28,7 +28,7 @@ import com.lbtrace.ashmemservice.AshmemWrapper;
 import com.lbtrace.ashmemservice.IAshmemReader;
 
 /*
- * File Description
+ * Provide service for Ashmem Client process.
  */
 public abstract class AshmemNative extends Binder implements IAshmem {
     private static final String LOG_TAG = AshmemNative.class.getSimpleName();
