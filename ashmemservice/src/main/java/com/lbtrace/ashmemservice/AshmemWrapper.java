@@ -147,6 +147,7 @@ public class AshmemWrapper implements Parcelable, IAshmemReader {
         }
         mAshmemSize = parcel.readInt();
         mNativePtr = nativeCreateFromParcel(parcel.readFileDescriptor().getFd(), mAshmemSize);
+        // Maybe null check it
         if (mNativePtr == 0) {
             throw new RuntimeException("Ashmem create fail!");
         }
